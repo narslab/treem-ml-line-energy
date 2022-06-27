@@ -19,7 +19,7 @@ add_dd_mm_yy_cols = function(df) {
 }
 # Read heavy rail location raw data
 get_heavy_rail_trajectories = function(year, month){
-    assign("dh", fread(paste(DISTANCE_FILEPATH, paste("heavyrail", "trajectories", month, year, ".csv", sep = "-", collapse = ""), sep="")))
+    assign("dh", fread(paste(DISTANCE_FILEPATH, paste("heavyrail", "trajectories", month, year, sep = "-", collapse = ""),  ".csv", sep="")))
     dh = add_dd_mm_yy_cols(dh)
     return(dh)
 }
@@ -39,14 +39,14 @@ preprocess_data = function(df){
 # Subset table by a given day
 get_day_trajectories = function(df, dayid){
     day_df = df[day == dayid, .SD, keyby = .(lineid, trainid) ]
-    print(paste("Number of observations", nrow(day_df), "on day", dayid ))
+    # print(paste("Number of observations", nrow(day_df), "on day", dayid ))
     return(day_df)
 }
 
 # Create trajectory index table 
 get_unique_trajectory_indices = function(day_df) {
     trajectory_index_df = unique(day_df[, .(trainid, vehicleid, lineid, heavyrailbranchid, tripid)])
-    print(paste("Number of unique trajectories extracted: ", dim(trajectory_index_df)[1]))
+    # print(paste("Number of unique trajectories extracted: ", dim(trajectory_index_df)[1]))
     return(trajectory_index_df)
 }
 

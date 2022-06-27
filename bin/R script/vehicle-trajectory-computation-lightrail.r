@@ -8,7 +8,7 @@ library(robfilter)# Smooth the data
 # Suggestion: Just do one year at one time. One year's table has 94363502 rows(green)
 YEARLIST = c('19',"20")
 MONTHLIST = c("01", "02", "03", "05", "07", "08", "09", "10", "11","12") # FOR FULL TABLE
-DISTANCE_FILEPATH = "F:/data/raw/vehicle-location/"
+DISTANCE_FILEPATH = "../../data/raw/vehicle-location/"
 
 # Add different time scale columns
 add_dd_mm_yy_cols = function(df) {
@@ -19,7 +19,7 @@ add_dd_mm_yy_cols = function(df) {
 }
 # Read light rail location raw data
 get_light_rail_trajectories = function(year, month){
-    assign("dg", fread(paste(DISTANCE_FILEPATH, paste("lightrail", "trajectories", month, year, ".csv", sep = "-", collapse = ""), sep="")))
+    assign("dg", fread(paste(DISTANCE_FILEPATH, paste("lightrail", "trajectories", month, year, sep = "-", collapse = ""),  ".csv", sep="")))
     dg = add_dd_mm_yy_cols(dg)
     return(dg)
 }
