@@ -8,7 +8,7 @@ library(robfilter)# Smooth the data
 # Suggestion: Just do one year at one time. One year's table has 94363502 rows(green)
 YEARLIST = c('19',"20")
 MONTHLIST = c("01", "02", "03", "05", "07", "08", "09", "10", "11","12") # FOR FULL TABLE
-DISTANCE_FILEPATH = "../../data/raw/vehicle-location/"
+DISTANCE_FILEPATH = "F:/data/raw/vehicle-location/"
 
 # Add different time scale columns
 add_dd_mm_yy_cols = function(df) {
@@ -19,7 +19,8 @@ add_dd_mm_yy_cols = function(df) {
 }
 # Read heavy rail location raw data
 get_heavy_rail_trajectories = function(year, month){
-    assign("dh", fread(paste(DISTANCE_FILEPATH, paste("heavyrail", "trajectories", month, year, sep = "-", collapse = ""),  ".csv", sep="")))
+    assign("dh", fread(paste(DISTANCE_FILEPATH, paste("heavyrail", "trajectories", month, year, ".csv", sep = "-", collapse = ""), sep="")))
+    # assign("dh", fread(paste(DISTANCE_FILEPATH, paste("heavyrail", "trajectories", month, year, sep = "-", collapse = ""),  ".csv", sep="")))
     dh = add_dd_mm_yy_cols(dh)
     return(dh)
 }
@@ -79,17 +80,17 @@ compute_time_interval <- function(d) {
     if (n >= 2) {
         # Compute time interval
         d$interval_seconds[2:n] = as.numeric(difftime(d$trxtime[2:n], d$trxtime[1:n-1], units = "secs"))
-        }
+    }
     return(d)
 }
 # compute vehicle distance
 compute_distance <- function(d) {
     d$dist_meters = NA
-     n <- nrow(d)
+    n <- nrow(d)
     if (n >= 2) {
         # Compute interval distance using Haversine function
         d$dist_meters[2:n] = distHaversine(cbind(d$lon[1:n-1],d$lat[1:n-1]),cbind(d$lon[2:n],d$lat[2:n]))
-        }
+    }
     return(d)
 }
 # compute speed and acceleration
@@ -103,7 +104,7 @@ compute_speed_acceleration <- function(d) {
         # Convert speed to kph
         d$speed_kph[2:n] = d$speed_mps[2:n] * 3.6
         d$accel_mps2[2:n] = (d$speed_mps[2:n] - d$speed_mps[1:n-1])/d$interval_seconds[2:n]
-        }
+    }
     return(d)
 } 
 # Calculate the cumulative dist and time
@@ -113,8 +114,8 @@ compute_cumulative_time_distance = function(d){
     df[is.na(df)] <- 0
     # Calculate the cumulative dist and time
     df = df %>%
-    mutate(cumdist = cumsum(dist_meters)) %>%
-    mutate(cumtime = cumsum(interval_seconds))
+        mutate(cumdist = cumsum(dist_meters)) %>%
+        mutate(cumtime = cumsum(interval_seconds))
     d$cumdist_km = df$cumdist/1000
     d$cumtime_hrs = df$cumtime/3600
     return(d)
@@ -159,8 +160,9 @@ process_month_trajectory = function(data){
     for(i in unique(data$day)) { 
         day_df = compute_day_trajectories(data, i)       
         results_df <- rbind(results_df, day_df)
-        }
- }
+    }
+    return (results_df)
+}
 
 # Generate the final table
 main = function(YEARLIST, MONTHLIST) {
@@ -170,7 +172,7 @@ main = function(YEARLIST, MONTHLIST) {
             df_heavy = preprocess_data(df_heavy)
             df_heavy = process_month_trajectory(df_heavy) 
             write.csv(x = df_heavy, 
-                      file.path("../../data/tidy", 
+                      file.path("F:/data/tidy", 
                                 paste(paste("heavy", "trajectory", y, m, sep = "-", collapse = ""), ".csv", sep="")))
         }
     }
