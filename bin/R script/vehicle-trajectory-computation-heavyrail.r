@@ -172,7 +172,7 @@ main = function(YEARLIST, MONTHLIST) {
             df_heavy = preprocess_data(df_heavy)
             df_heavy = process_month_trajectory(df_heavy) 
             write.csv(x = df_heavy, 
-                      file.path("F:/data/tidy", 
+                      file.path("F:/data/tidy/vehicle-trajectory-computation/", 
                                 paste(paste("heavy", "trajectory", y, m, sep = "-", collapse = ""), ".csv", sep="")))
         }
     }
