@@ -1,6 +1,5 @@
 ## Exclude data files
-data/raw/
-data/tidy/
+data
 
 ## Exclude jupyter lab checkpoint files
 *-checkpoint.ipynb
